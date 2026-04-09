@@ -52,10 +52,6 @@
         techList.innerHTML = '';
     }
 
-    /**
-     * RESET TECH
-     * Global reset for tech audit tool
-     */
     window.resetTech = function() {
         urlInput.value = '';
         sourceInput.value = '';
@@ -95,12 +91,20 @@
             { label: "✅ Booking Widget", check: lowHtml.includes('calendly') || lowHtml.includes('reservio') || lowHtml.includes('doctolib') }
         ];
 
-        // 3. TECH ALERTS
+        // 3. TECH ALERTS (Refined)
+        const hasLegacyImages = lowHtml.includes('.jpg') || lowHtml.includes('.png') || lowHtml.includes('.jpeg');
+        const hasModernImages = lowHtml.includes('.webp') || lowHtml.includes('.avif');
+        const hasLazyLoading = html.includes('loading="lazy"') || html.includes('data-src=');
+        const hasImageOptimizer = lowHtml.includes('smush') || lowHtml.includes('imagify') || lowHtml.includes('shortpixel');
+
         const alerts = [
             { label: "❌ Email en clair (Spam)", check: html.match(/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+/)?.[0] && !lowHtml.includes('mailto:') },
             { label: "❌ Pas de Meta Description", check: !lowHtml.includes('name="description"') },
             { label: "❌ Pas de Viewport (Mobile)", check: !lowHtml.includes('name="viewport"') },
-            { label: "❌ Images non-optimisées", check: lowHtml.includes('.jpg') && !lowHtml.includes('loading="lazy"') },
+            { 
+                label: "❌ Images non-optimisées", 
+                check: hasLegacyImages && !hasModernImages && !hasImageOptimizer && !hasLazyLoading 
+            },
             { label: "❌ Fuite de version (WP)", check: lowHtml.includes('name="generator" content="wordpress') }
         ];
 
@@ -116,7 +120,6 @@
 
         resultsArea.style.display = 'block';
         
-        // Update Hub Header only if Tech view is active
         const activeNav = document.querySelector('.nav-btn.active');
         if (activeNav && activeNav.innerText.includes('Tech')) {
             document.getElementById('statValue').innerText = tech.split(' ')[0];
