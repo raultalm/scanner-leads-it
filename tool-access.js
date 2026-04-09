@@ -16,6 +16,7 @@
     const repairsList = document.getElementById('accessRepairs');
 
     const btnWave = document.getElementById('linkWave');
+    const btnAxe = document.getElementById('linkAxe');
     const btnContrast = document.getElementById('linkContrast');
 
     scanBtn.addEventListener('click', async () => {
@@ -76,6 +77,7 @@
         // 3. Contrast & Advanced Links
         if (url) {
             btnWave.onclick = () => window.open(`https://wave.webaim.org/report#/${url}`, '_blank');
+            btnAxe.onclick = () => window.open(`https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}&category=ACCESSIBILITY`, '_blank');
             btnContrast.onclick = () => window.open(`https://webaim.org/resources/contrastchecker/`, '_blank');
         }
 
