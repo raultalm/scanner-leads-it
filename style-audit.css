@@ -1,0 +1,114 @@
+/**
+ * SHARED AUDIT STYLES
+ * Used by Tech, SEO, and Access tools
+ */
+
+.tech-audit-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+}
+
+.audit-input-group {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.audit-input-group input, 
+.audit-input-group textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1.1rem 1.5rem;
+    color: #fff;
+    outline: none;
+    transition: var(--transition);
+}
+
+.audit-input-group input:focus, 
+.audit-input-group textarea:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 15px rgba(124, 168, 255, 0.2);
+}
+
+.audit-btn {
+    background: var(--accent-blue);
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 1.1rem 2.5rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    width: 100%;
+}
+
+.audit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 25px rgba(124, 168, 255, 0.4);
+}
+
+.results-box {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255,255,255,0.03);
+    display: none;
+    animation: viewIn 0.4s ease;
+}
+
+.tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--accent-blue-dim);
+    border: 1px solid rgba(124, 168, 255, 0.3);
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+}
+
+.tech-name { font-size: 1.25rem; font-weight: 800; color: var(--accent-blue); }
+
+.advice-card {
+    text-align: left;
+    border-left: 4px solid var(--accent-blue);
+    padding-left: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.advice-card h3 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.15em;
+}
+
+.advice-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+
+.loader {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(124, 168, 255, 0.1);
+    border-top: 3px solid var(--accent-blue);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

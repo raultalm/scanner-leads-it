@@ -1,0 +1,175 @@
+/**
+ * HUB CORE STYLES
+ * Variables, Layout, and Shared UI Components
+ */
+
+:root {
+    --bg-page: #0d0f12;
+    --bg-card: #16191f;
+    --glass-bg: rgba(22, 25, 31, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-secondary: #8e95a2;
+    --accent-blue: #7ca8ff;
+    --accent-blue-dim: rgba(124, 168, 255, 0.15);
+    --gauge-green: #4ade80;
+    --gauge-yellow: #facc15;
+    --gauge-orange: #fb923c;
+    --gauge-red: #f87171;
+    --radius-xl: 32px;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-page);
+    background-image: 
+        radial-gradient(circle at 0% 0%, rgba(124, 168, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(124, 168, 255, 0.05) 0%, transparent 50%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    line-height: 1.5;
+}
+
+/* --- HUB CONTAINER --- */
+.hub-container {
+    position: relative;
+    width: 100%;
+    max-width: 850px;
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: 3rem;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    animation: appEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes appEntry {
+    from { opacity: 0; transform: scale(0.98) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- NAVIGATION --- */
+.tool-nav {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    border-radius: 16px;
+    display: flex;
+    gap: 4px;
+    align-self: center;
+    margin-bottom: 0.5rem;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-btn.active {
+    background: var(--accent-blue-dim);
+    color: var(--accent-blue);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.nav-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.reset-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: rgba(248, 113, 113, 0.05);
+    border: 1px solid rgba(248, 113, 113, 0.2);
+    color: var(--gauge-red);
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 100;
+}
+
+.reset-btn:hover {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: var(--gauge-red);
+    transform: translateY(-1px);
+}
+
+/* --- SHARED HEADER --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 1.5rem;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(to bottom right, #fff, #8e95a2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+header .tagline {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    max-width: 520px;
+    line-height: 1.6;
+}
+
+.header-right { display: flex; gap: 2.5rem; }
+.stat-group label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+.stat-group .stat-value { font-size: 1.15rem; font-weight: 800; color: var(--accent-blue); }
+
+/* --- TOOL VIEWS --- */
+.tool-view { display: none; flex-direction: column; gap: 2.5rem; animation: viewIn 0.4s ease; }
+.tool-view.active { display: flex; }
+
+@keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- FOOTER --- */
+.footer-branding { text-align: center; font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 1rem; font-weight: 700; opacity: 0.4; }
+
+@media (max-width: 800px) {
+    .header-right { display: none; }
+    .hub-container { padding: 2rem; }
+}

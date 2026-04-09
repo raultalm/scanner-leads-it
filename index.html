@@ -4,306 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IT Mechanic - Diagnostic Hub</title>
+    
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="style-hub.css">
+    <link rel="stylesheet" href="tool-diag.css">
+    <link rel="stylesheet" href="style-audit.css">
+    <link rel="stylesheet" href="tool-report.css">
+    
+    <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-page: #0d0f12;
-            --bg-card: #16191f;
-            --glass-bg: rgba(22, 25, 31, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #ffffff;
-            --text-secondary: #8e95a2;
-            --accent-blue: #7ca8ff;
-            --accent-blue-dim: rgba(124, 168, 255, 0.15);
-            --gauge-green: #4ade80;
-            --gauge-yellow: #facc15;
-            --gauge-orange: #fb923c;
-            --gauge-red: #f87171;
-            --radius-xl: 32px;
-            --radius-lg: 18px;
-            --radius-md: 12px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-page);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(124, 168, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(124, 168, 255, 0.05) 0%, transparent 50%);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            line-height: 1.5;
-        }
-
-        .hub-container {
-            position: relative;
-            width: 100%;
-            max-width: 850px;
-            background: var(--bg-card);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: 3rem;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-            animation: appEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes appEntry {
-            from { opacity: 0; transform: scale(0.98) translateY(20px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        /* --- NAVIGATION --- */
-        .tool-nav {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 6px;
-            border-radius: 16px;
-            display: flex;
-            gap: 4px;
-            align-self: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-btn.active {
-            background: var(--accent-blue-dim);
-            color: var(--accent-blue);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .nav-btn:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-        }
-
-        .reset-btn {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: rgba(248, 113, 113, 0.05);
-            border: 1px solid rgba(248, 113, 113, 0.2);
-            color: var(--gauge-red);
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: var(--transition);
-            z-index: 100;
-        }
-
-        .reset-btn:hover {
-            background: rgba(248, 113, 113, 0.15);
-            border-color: var(--gauge-red);
-            transform: translateY(-1px);
-        }
-
-        /* --- SHARED HEADER --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 1.5rem;
-        }
-
-        .header-left h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.4rem;
-            background: linear-gradient(to bottom right, #fff, #8e95a2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-left .tagline {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            max-width: 520px;
-            line-height: 1.6;
-        }
-
-        .header-right { display: flex; gap: 2.5rem; }
-        .stat-group label {
-            display: block;
-            font-size: 0.65rem;
-            font-weight: 800;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.4rem;
-        }
-        .stat-group .stat-value { font-size: 1.15rem; font-weight: 800; color: var(--accent-blue); }
-
-        /* --- TOOL VIEWS --- */
-        .tool-view { display: none; flex-direction: column; gap: 2.5rem; animation: viewIn 0.4s ease; }
-        .tool-view.active { display: flex; }
-
-        @keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- LE DIAG SPECIFIC STYLES --- */
-        .visualization-area {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: var(--radius-lg);
-            padding: 3.5rem 2rem 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gauge-container {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            height: 240px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .gauge-svg { width: 100%; height: 100%; }
-
-        .gauge-needle {
-            transform-origin: 50px 85px;
-            transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .gauge-labels {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: -50px;
-            padding: 0 8%;
-            z-index: 10;
-        }
-
-        .label-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.6rem;
-            color: var(--text-secondary);
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: var(--transition);
-        }
-
-        .label-item.active { color: var(--text-primary); transform: scale(1.1); }
-        .label-item .icon { 
-            width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.1); 
-            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; 
-            background: rgba(0,0,0,0.2); transition: var(--transition); 
-        }
-
-        .label-item.active.stable .icon { border-color: var(--gauge-green); color: var(--gauge-green); box-shadow: 0 0 15px rgba(74, 222, 128, 0.2); }
-        .label-item.active.opportunity .icon { border-color: var(--gauge-red); color: var(--gauge-red); box-shadow: 0 0 15px rgba(248, 113, 113, 0.2); }
-
-        .gauge-center-text { text-align: center; margin-top: -25px; }
-        .opportunity-level { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 0 20px rgba(0,0,0,0.5); }
-
-        /* --- COMMON FORM STYLES --- */
-        .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem 4rem; }
-        .control-row { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
-        .control-row label { font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap; transition: var(--transition); }
-        .control-row:hover label { color: var(--text-primary); }
-
-        .slider-wrapper { flex-grow: 1; display: flex; align-items: center; gap: 1.25rem; }
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]::-webkit-slider-runnable-track { height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
-        input[type=range]::-webkit-slider-thumb { 
-            -webkit-appearance: none; height: 22px; width: 10px; border-radius: 3px; 
-            background: var(--accent-blue); cursor: pointer; margin-top: -9px; border: none; 
-            box-shadow: 0 0 15px rgba(124, 168, 255, 0.3); transition: var(--transition); 
-        }
-
-        .value-box { 
-            background: var(--accent-blue-dim); border: 1px solid rgba(124, 168, 255, 0.2); 
-            border-radius: 8px; padding: 5px 10px; min-width: 50px; text-align: center; 
-            font-weight: 800; font-size: 0.85rem; color: var(--accent-blue); 
-        }
-
-        .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.1); transition: .4s; border-radius: 34px; }
-        .slider:before { 
-            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; 
-            background-color: #8e95a2; transition: .4s cubic-bezier(0.68, -0.55, 0.265, 1.55); border-radius: 50%; 
-        }
-        input:checked + .slider { background-color: var(--accent-blue-dim); border: 1px solid rgba(124, 168, 255, 0.3); }
-        input:checked + .slider:before { transform: translateX(20px); background-color: var(--accent-blue); box-shadow: 0 0 10px rgba(124, 168, 255, 0.5); }
-        .control-row.disabled { opacity: 0.3; pointer-events: none; }
-
-        /* --- TECH/SEO/ACCESS AREA STYLES --- */
-        .tech-audit-area { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2rem; }
-        .audit-input-group { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 1.5rem; }
-        .audit-input-group input, .audit-input-group textarea { 
-            width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); 
-            border-radius: 12px; padding: 1.1rem 1.5rem; color: #fff; outline: none; transition: var(--transition); 
-        }
-        .audit-btn { 
-            background: var(--accent-blue); color: #000; border: none; border-radius: 12px; 
-            padding: 1.1rem 2.5rem; font-weight: 800; cursor: pointer; transition: var(--transition); 
-            text-transform: uppercase; letter-spacing: 0.05em; width: 100%; 
-        }
-        .results-box { width: 100%; background: rgba(0, 0, 0, 0.2); border-radius: 20px; padding: 2rem; border: 1px solid rgba(255,255,255,0.03); display: none; }
-        .tech-badge { 
-            display: inline-flex; align-items: center; gap: 0.75rem; background: var(--accent-blue-dim); 
-            border: 1px solid rgba(124, 168, 255, 0.3); padding: 0.8rem 1.8rem; border-radius: 50px; margin-bottom: 1.5rem; 
-        }
-        .tech-name { font-size: 1.25rem; font-weight: 800; color: var(--accent-blue); }
-        .advice-card { text-align: left; border-left: 4px solid var(--accent-blue); padding-left: 1.5rem; }
-        .advice-card h3 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.6rem; letter-spacing: 0.15em; }
-        .advice-card p { font-size: 0.95rem; line-height: 1.6; color: #e2e8f0; }
-        
-        .loader { 
-            display: none; width: 32px; height: 32px; border: 3px solid rgba(124, 168, 255, 0.1); 
-            border-top: 3px solid var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; 
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        .footer-branding { text-align: center; font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.25em; margin-top: 1rem; font-weight: 700; opacity: 0.4; }
-
-        @media (max-width: 800px) {
-            .controls-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .header-right { display: none; }
-            .hub-container { padding: 2rem; }
-            .gauge-labels { padding: 0 4%; }
-        }
-    </style>
 </head>
 <body>
 
@@ -393,18 +104,26 @@
             <div class="audit-input-group">
                 <input type="text" id="urlInput" placeholder="https://exemple.be">
                 <button class="audit-btn" id="scanBtn">Scanner Automatique</button>
-                <textarea id="sourceInput" placeholder="Ou code source (Ctrl+U)..." style="height: 60px; margin-top: 1rem;"></textarea>
-                <button class="audit-btn" id="manualBtn" style="background: var(--accent-blue-dim); color: var(--accent-blue); margin-top: 0.5rem; font-size: 0.8rem; padding: 0.6rem;">Analyse Manuelle</button>
+                <div style="margin: 1rem 0; color: var(--text-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">— OU —</div>
+                <textarea id="sourceInput" placeholder="Collez le code source ici (Ctrl+U)..." style="height: 80px;"></textarea>
+                <button class="audit-btn" id="manualBtn" style="background: var(--accent-blue-dim); color: var(--accent-blue); margin-top: -0.5rem; font-size: 0.85rem; padding: 0.8rem;">Analyser le code source</button>
             </div>
             <div class="loader" id="loader"></div>
             <div class="results-box" id="resultsArea">
                 <div class="tech-badge"><span class="tech-name" id="detectedTech">Chargement...</span></div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; text-align: left;">
-                    <div style="background: rgba(124, 168, 255, 0.05); padding: 0.8rem; border-radius: 12px;"><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.4rem;">Marketing</h4><ul id="marketingList" style="list-style: none; font-size: 0.75rem;"></ul></div>
-                    <div style="background: rgba(248, 113, 113, 0.05); padding: 0.8rem; border-radius: 12px;"><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--gauge-red); margin-bottom: 0.4rem;">Alertes</h4><ul id="techList" style="list-style: none; font-size: 0.75rem;"></ul></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                    <div style="background: rgba(124, 168, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(124, 168, 255, 0.1);">
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Marketing & Tracking</h4>
+                        <ul id="marketingList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
+                    </div>
+                    <div style="background: rgba(248, 113, 113, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.1);">
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-red); margin-bottom: 0.5rem;">Alertes Techniques</h4>
+                        <ul id="techList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
+                    </div>
                 </div>
-                <div class="advice-card"><p id="adviceText" style="font-size: 0.85rem;"></p></div>
+                <div class="advice-card"><p id="adviceText"></p></div>
             </div>
+            <div id="errorMsg" style="color: #f87171; font-size: 0.9rem; display: none; background: rgba(248,113,113,0.1); padding: 1rem; border-radius: 12px;">Lecture bloquée.</div>
         </div>
     </div>
 
@@ -418,19 +137,19 @@
             </div>
             <div class="loader" id="seoLoader"></div>
             <div id="seoResults" class="results-box" style="text-align: left;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Structure</h4><div id="seoStructure" style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
-                    <div><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--gauge-yellow); margin-bottom: 0.5rem;">Meta</h4><div id="seoMeta" style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div><h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.8rem;">Structure</h4><div id="seoStructure" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div></div>
+                    <div><h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-yellow); margin-bottom: 0.8rem;">Meta</h4><div id="seoMeta" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem;"></div></div>
                 </div>
-                <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; margin-bottom: 1rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
                     <div style="display: flex; gap: 0.5rem;">
-                        <button id="linkGoogleSpeed" class="audit-btn" style="flex: 1; padding: 0.5rem; font-size: 0.65rem; background: #4285F4; color: white;">PageSpeed</button>
-                        <button id="linkYellowLab" class="audit-btn" style="flex: 1; padding: 0.5rem; font-size: 0.65rem; background: #f1c40f; color: black;">Yellow Lab</button>
+                        <button id="linkGoogleSpeed" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #4285F4; color: white;">PageSpeed</button>
+                        <button id="linkYellowLab" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #f1c40f; color: black;">Yellow Lab</button>
                     </div>
                 </div>
                 <div class="advice-card" style="border-left-color: var(--gauge-yellow);">
-                    <p id="seoAdvice" style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;"></p>
-                    <ul id="seoRepairs" style="font-size: 0.75rem; padding-left: 1rem;"></ul>
+                    <p id="seoAdvice" style="margin-bottom: 1rem; font-weight: 700;"></p>
+                    <ul id="seoRepairs" style="font-size: 0.8rem; color: #cbd5e1; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
                 </div>
             </div>
         </div>
@@ -446,19 +165,19 @@
             </div>
             <div class="loader" id="accessLoader"></div>
             <div id="accessResults" class="results-box" style="text-align: left;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                    <div><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Fondamentaux</h4><div id="accessChecklist" style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
-                    <div><h4 style="font-size: 0.6rem; text-transform: uppercase; color: var(--gauge-orange); margin-bottom: 0.5rem;">Interactivité</h4><div id="accessInter" style="font-size: 0.75rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div><h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Fondamentaux</h4><div id="accessChecklist" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
+                    <div><h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-orange); margin-bottom: 0.5rem;">Interactivité</h4><div id="accessInter" style="font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.3rem;"></div></div>
                 </div>
-                <div style="background: rgba(255,255,255,0.03); padding: 0.8rem; border-radius: 12px; margin-bottom: 1rem;">
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
                     <div style="display: flex; gap: 0.5rem;">
-                        <button id="linkWave" class="audit-btn" style="flex: 1; padding: 0.5rem; font-size: 0.65rem; background: #e67e22; color: white;">WAVE Audit</button>
-                        <button id="linkContrast" class="audit-btn" style="flex: 1; padding: 0.5rem; font-size: 0.65rem; background: #34495e; color: white;">Contrast Checker</button>
+                        <button id="linkWave" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #e67e22; color: white;">WAVE Audit</button>
+                        <button id="linkContrast" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #34495e; color: white;">Contrast Checker</button>
                     </div>
                 </div>
                 <div class="advice-card" style="border-left-color: var(--gauge-orange);">
                     <p id="accessAdvice" style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.5rem;"></p>
-                    <ul id="accessRepairs" style="font-size: 0.75rem; padding-left: 1rem;"></ul>
+                    <ul id="accessRepairs" style="font-size: 0.8rem; color: #cbd5e1; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem;"></ul>
                 </div>
             </div>
         </div>
@@ -466,13 +185,17 @@
 
     <!-- VIEW 5: RAPPORT -->
     <div id="view-report" class="tool-view">
-        <div id="reportBox" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 20px; padding: 1.5rem; color: #e2e8f0; font-family: monospace; font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap; max-height: 300px; overflow-y: auto;">Compilez vos données...</div>
-        <div style="display: flex; gap: 1rem;"><button class="audit-btn" onclick="generateReport()" style="flex: 2;">Générer la Synthèse</button><button class="audit-btn" onclick="copyReport()" style="flex: 1; background: var(--accent-blue-dim); color: var(--accent-blue);">Copier</button></div>
+        <div id="reportBox">Compilez vos données...</div>
+        <div class="report-actions">
+            <button class="audit-btn" onclick="generateReport()" style="flex: 2;">Générer la Synthèse</button>
+            <button class="audit-btn" onclick="copyReport()" style="flex: 1; background: var(--accent-blue-dim); color: var(--accent-blue);">Copier pour l'IA</button>
+        </div>
     </div>
 
     <div class="footer-branding">The IT Mechanic • Diagnostic Hub v2.8</div>
 </div>
 
+<!-- JS Logic -->
 <script src="app-nav.js"></script>
 <script src="tool-diag.js"></script>
 <script src="tool-tech.js"></script>
