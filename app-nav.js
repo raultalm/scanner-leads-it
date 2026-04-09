@@ -10,7 +10,8 @@ function switchTool(tool) {
     document.querySelectorAll('.tool-view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     
-    document.getElementById(`view-${tool}`).classList.add('active');
+    const targetView = document.getElementById(`view-${tool}`);
+    if (targetView) targetView.classList.add('active');
     
     // Set active button
     if (window.event && window.event.currentTarget.classList.contains('nav-btn')) {
@@ -44,6 +45,12 @@ function switchTool(tool) {
         statLabel.innerText = "SEO Signal";
         statValue.innerText = "Analyse";
         statusValue.innerText = "Structure";
+    } else if(tool === 'access') {
+        title.innerText = "Accessibilité";
+        tagline.innerText = "Conformité WCAG 2.1 et inclusion numérique.";
+        statLabel.innerText = "Inclusion";
+        statValue.innerText = "Audit";
+        statusValue.innerText = "WCAG";
     } else if(tool === 'report') {
         title.innerText = "Rapport";
         tagline.innerText = "Brief de prospection complet pour votre IA.";
@@ -62,6 +69,7 @@ function globalReset() {
     if (typeof window.resetDiag === 'function') window.resetDiag();
     if (typeof window.resetTech === 'function') window.resetTech();
     if (typeof window.resetSEO === 'function') window.resetSEO();
+    if (typeof window.resetAccess === 'function') window.resetAccess();
     if (typeof window.resetReport === 'function') window.resetReport();
 
     switchTool('diag');

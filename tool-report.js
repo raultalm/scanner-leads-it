@@ -24,10 +24,12 @@
         const techAlerts = Array.from(document.getElementById('techList').children).map(li => li.innerText);
 
         // 3. Gather SEO Data
-        const seoStructure = Array.from(document.getElementById('seoStructure').children).map(div => div.innerText);
-        const seoMeta = Array.from(document.getElementById('seoMeta').children).map(div => div.innerText);
+        const seoRepairs = Array.from(document.getElementById('seoRepairs').children).map(li => li.innerText);
 
-        // 4. Construct the Prompt/Report
+        // 4. Gather Access Data
+        const accessRepairs = Array.from(document.getElementById('accessRepairs').children).map(li => li.innerText);
+
+        // 5. Construct the Prompt/Report
         let report = `CONTEXTE DE PROSPECTION (Brief pour IA)\n`;
         report += `========================================\n\n`;
         
@@ -36,22 +38,16 @@
         report += `- Note Moyenne : ${rating}/5\n`;
         report += `- Score d'opportunité : ${score} (${status})\n\n`;
 
-        report += `[AUDIT TECHNIQUE & SEO]\n`;
+        report += `[AUDIT TECHNIQUE, SEO & ACCÈS]\n`;
         report += `- Stack : ${tech}\n`;
-        report += `- Signaux Mkt : ${marketingSignals.join(', ') || 'Aucun'}\n`;
-        report += `- SEO Structure : ${seoStructure.join(', ') || 'Non analysé'}\n`;
-        report += `- SEO Meta : ${seoMeta.join(', ') || 'Non analysé'}\n`;
-        report += `- Alertes : ${techAlerts.join(', ') || 'Aucune'}\n\n`;
-
-        report += `[POINTS DE DOULEUR DÉTECTÉS]\n`;
-        if (hasNoWebsite) report += `- Pas de site pro.\n`;
-        if (isNotMobile) report += `- Pas responsive.\n`;
-        if (isManualBooking) report += `- Réservation manuelle.\n`;
-        if (hasCommFriction) report += `- Problèmes de contact.\n\n`;
+        report += `- Marketing : ${marketingSignals.join(', ') || 'Aucun'}\n`;
+        report += `- SEO (Reparations) : ${seoRepairs.join(' | ') || 'Aucune'}\n`;
+        report += `- Accessibilité (WCAG) : ${accessRepairs.join(' | ') || 'Aucune'}\n`;
+        report += `- Alertes Critiques : ${techAlerts.join(', ') || 'Aucune'}\n\n`;
 
         report += `[MISSION DE L'IA]\n`;
-        report += `Rédige un email d'approche court et pragmatique. Ton : "IT Mechanic" (direct, réparateur, pas vendeur). \n`;
-        report += `Focus sur la réparation des points de douleur détectés pour augmenter leur CA.`;
+        report += `Rédige un email d'approche court, pragmatique et professionnel. Ton : "IT Mechanic" (direct, réparateur, focus sur le retour sur investissement). \n`;
+        report += `Utilise les arguments SEO et d'Accessibilité (exclusion de clients, conformité européenne) pour convaincre.`;
 
         reportBox.innerText = report;
     };
