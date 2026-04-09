@@ -66,6 +66,10 @@
             { name: "Wix / Squarespace", patterns: ['static.wixstatic.com', 'wix-ads', 'wix-code', 'squarespace.com', 'sqsp.net'], advice: "Solution 'No-Code' propriétaire. Idéal pour une migration vers un site sur mesure si le business évolue." },
             { name: "Shopify", patterns: ['cdn.shopify.com', 'shopify-section', 'shopify-theme', 'shopify.shop'], advice: "E-commerce leader. Focus sur l'optimisation du tunnel d'achat ou l'automatisation des flux stocks/factures." },
             { name: "WordPress", patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'], advice: "Lourd et souvent mal sécurisé. Proposez une maintenance de sécurité ou un audit de performance." },
+            { name: "PrestaShop", patterns: ['prestashop', 'ps_core.js', '/modules/ps_'], advice: "E-commerce standard. Souvent lent et complexe à maintenir. Proposez une optimisation de la vitesse ou du SEO." },
+            { name: "Joomla", patterns: ['index.php?option=com_', 'joomla!', 'Joomla.extend'], advice: "Technologie vieillissante. Forte probabilité de failles de sécurité. Idéal pour proposer une refonte totale." },
+            { name: "Drupal", patterns: ['Drupal.settings', '/sites/default/files', 'drupal.behaviors'], advice: "CMS robuste mais complexe. Demande une expertise technique élevée pour les mises à jour majeures." },
+            { name: "Jahia / AEM", patterns: ['jahia-static', '/etc.clientlibs/', '/content/dam/'], advice: "CMS Enterprise (Java). Client à gros budget. Focus sur l'intégration de systèmes complexes." },
             { name: "Next.js (React)", patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count'], advice: "Stack moderne et performante. Focus sur l'automatisation métier ou l'optimisation SEO avancée." },
             { name: "React / Vite", patterns: ['/assets/index-', 'vite-plugin-react', 'react-dom'], advice: "App moderne (SPA). Très bon signe technique. Proposez de l'extension de fonctionnalités complexes." },
             { name: "PHP (Vieux)", patterns: ['.php', 'PHPSESSID'], advice: "Technologie vieillissante. Risque de bugs et de failles. Proposez un refactoring moderne." }
