@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Scanner de Leads IT - IT Mechanic</title>
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            
+            /* Status Colors */
+            --color-high: #22c55e; /* Green for High Opportunity */
+            --color-medium: #f59e0b; /* Amber for Medium */
+            --color-low: #ef4444; /* Red for Low */
+            
+            /* UI Elements */
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .app-container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 650px;
+            border-radius: var(--radius-md);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 1px solid var(--bg-input);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--accent-blue);
+        }
+
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .value-display {
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+        }
+
+        /* Styling the Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: var(--bg-input);
+            border-radius: 3px;
+        }
+
+        /* Number Input */
+        input[type="number"] {
+            background-color: var(--bg-input);
+            border: 1px solid transparent;
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition-smooth);
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Custom Toggle Checkboxes */
+        .flags-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .toggle-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: var(--bg-base);
+            border: 1px solid var(--bg-input);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-card:hover {
+            border-color: var(--text-muted);
+        }
+
+        .toggle-card input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--text-muted);
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .toggle-indicator::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: transparent;
+            border-radius: 2px;
+            transition: var(--transition-smooth);
+        }
+
+        /* Active Toggle State */
+        .toggle-card.active {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-color: var(--accent-blue);
+        }
+        .toggle-card.active .toggle-indicator {
+            border-color: var(--accent-blue);
+        }
+        .toggle-card.active .toggle-indicator::after {
+            background-color: var(--accent-blue);
+        }
+        .toggle-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            user-select: none;
+        }
+
+        /* Visualization Section */
+        .visualization-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--bg-base);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--bg-input);
+            text-align: center;
+        }
+
+        .gauge-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            margin-bottom: 1.5rem;
+        }
+
+        .gauge-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: var(--bg-input);
+            stroke-width: 8;
+        }
+
+        .gauge-progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            /* Circumference = 2 * PI * r (r=40 -> 251.2) */
+            stroke-dasharray: 251.2; 
+            stroke-dashoffset: 251.2; /* Starts empty */
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.5s ease;
+        }
+
+        .gauge-text-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-score {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            transition: color 0.5s ease;
+        }
+
+        .gauge-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .recommendation-box {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recommendation-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            font-weight: 500;
+            transition: color 0.5s ease;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>🛠️ Le Scanner de Leads IT</h1>
+    </header>
+
+    <div class="controls-section">
+        <div class="input-group">
+            <div class="input-header">
+                <label>Note Google Maps</label>
+                <span class="value-display" id="ratingVal">4.2</span>
+            </div>
+            <input type="range" id="ratingInput" min="1.0" max="5.0" step="0.1" value="4.2">
+        </div>
+
+        <div class="input-group">
+            <label>Nombre total d'avis</label>
+            <input type="number" id="reviewsInput" min="0" value="100">
+        </div>
+
+        <div class="input-group">
+            <label>Indicateurs de Dette Technique (Drapeaux Rouges)</label>
+            <div class="flags-grid">
+                <label class="toggle-card" id="card-flag1">
+                    <input type="checkbox" class="flag-input" value="20">
+                    <div class="toggle-indicator"></div>
+                    <span class="toggle-text">Pas de site web ou lien générique (Linktree/FB)</span>
+                </label>
+                
+                <label class="toggle-card active" id="card-flag2">
+                    <input type="checkbox" class="flag-input" value="15" checked>
+                    <div class="toggle-indicator"></div>
+                    <span class="toggle-text">Le site web n'est PAS adapté aux mobiles</span>
+                </label>
+                
+                <label class="toggle-card active" id="card-flag3">
+                    <input type="checkbox" class="flag-input" value="25" checked>
+                    <div class="toggle-indicator"></div>
+                    <span class="toggle-text">Pas de système de réservation en ligne direct</span>
+                </label>
+
+                <label class="toggle-card active" id="card-flag4">
+                    <input type="checkbox" class="flag-input" value="15" checked>
+                    <div class="toggle-indicator"></div>
+                    <span class="toggle-text">Avis signalant des problèmes de contact/planning</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="visualization-section">
+        <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 100 100">
+                <circle class="gauge-bg" cx="50" cy="50" r="40"></circle>
+                <circle class="gauge-progress" id="gaugePath" cx="50" cy="50" r="40"></circle>
+            </svg>
+            <div class="gauge-text-container">
+                <span class="gauge-score" id="scoreDisplay">0</span>
+                <span class="gauge-label">Score d'Opportunité</span>
+            </div>
+        </div>
+        <div class="recommendation-box">
+            <p class="recommendation-text" id="recText">Analyse en cours...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // DOM Elements
+    const ratingInput = document.getElementById('ratingInput');
+    const ratingDisplay = document.getElementById('ratingVal');
+    const reviewsInput = document.getElementById('reviewsInput');
+    const flagInputs = document.querySelectorAll('.flag-input');
+    
+    const gaugePath = document.getElementById('gaugePath');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const recText = document.getElementById('recText');
+
+    // Constants for SVG Gauge (Radius = 40, Circumference = 2 * PI * 40 ≈ 251.2)
+    const GAUGE_CIRCUMFERENCE = 251.2;
+
+    // Toggle Card Visual Logic
+    flagInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const card = this.closest('.toggle-card');
+            if (this.checked) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+            calculateAndRender();
+        });
+    });
+
+    // Input Listeners
+    ratingInput.addEventListener('input', () => {
+        ratingDisplay.innerText = parseFloat(ratingInput.value).toFixed(1);
+        calculateAndRender();
+    });
+    reviewsInput.addEventListener('input', calculateAndRender);
+
+    // Core Logic Engine
+    function calculateAndRender() {
+        const rating = parseFloat(ratingInput.value) || 0;
+        const reviews = parseInt(reviewsInput.value) || 0;
+        
+        let score = 0;
+
+        // Base Score (Client Success / Ability to pay)
+        if (rating >= 4.0 && reviews >= 30) {
+            score += 25; 
+        } else if (rating >= 4.0 && reviews < 30) {
+            score += 10; 
+        } else if (rating < 4.0 && reviews > 10) {
+            score += 5; 
+        }
+
+        // Tech Debt Score (Opportunity to fix)
+        flagInputs.forEach(input => {
+            if (input.checked) score += parseInt(input.value);
+        });
+
+        score = Math.min(score, 100);
+
+        updateVisuals(score);
+    }
+
+    // UI Rendering Engine
+    function updateVisuals(score) {
+        // Animate Number
+        scoreDisplay.innerText = score;
+
+        // Determine Theme Color and Text based on Score bracket
+        let themeColor = '';
+        let message = '';
+
+        if (score >= 75) {
+            // High Opportunity (Green)
+            themeColor = 'var(--color-high)';
+            message = "Cible idéale. Clientèle établie mais système défaillant. Proposez une automatisation ou une refonte d'urgence.";
+        } else if (score >= 40) {
+            // Medium Opportunity (Amber)
+            themeColor = 'var(--color-medium)';
+            message = "Opportunité ciblée. Leurs affaires tournent, mais un correctif précis (ex: ajout de module de réservation) fera la différence.";
+        } else {
+            // Low Opportunity (Red)
+            themeColor = 'var(--color-low)';
+            message = "À ignorer. Soit leur technique est déjà optimisée, soit le volume d'affaires est trop faible pour un budget consulting.";
+        }
+
+        // Apply Styles
+        scoreDisplay.style.color = themeColor;
+        recText.style.color = themeColor;
+        recText.innerText = message;
+        gaugePath.style.stroke = themeColor;
+
+        // Calculate and apply SVG dash offset for the animation
+        const offset = GAUGE_CIRCUMFERENCE - (score / 100) * GAUGE_CIRCUMFERENCE;
+        gaugePath.style.strokeDashoffset = offset;
+    }
+
+    // Initialize on load
+    window.onload = calculateAndRender;
+
+</script>
+</body>
+</html>
