@@ -219,7 +219,8 @@
     <nav class="tool-nav">
         <button class="nav-btn active" onclick="switchTool('diag')">🛠️ Le Diag</button>
         <button class="nav-btn" onclick="switchTool('tech')">💻 Tech Audit</button>
-        <button class="nav-btn" onclick="switchTool('upcoming')" style="opacity: 0.5;">🔒 Coming Soon</button>
+        <button class="nav-btn" onclick="switchTool('report')">📄 Rapport</button>
+        <button class="nav-btn" onclick="switchTool('upcoming')" style="opacity: 0.5;">🔒 Plus</button>
     </nav>
 
     <header>
@@ -330,12 +331,29 @@
         </div>
     </div>
 
-    <div class="footer-branding">The IT Mechanic • Diagnostic Hub v2.5</div>
+    <!-- VIEW 3: PROSPECT REPORT (AI BRIEF) -->
+    <div id="view-report" class="tool-view">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div id="reportBox" style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; color: #e2e8f0; font-family: monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; text-align: left; max-height: 400px; overflow-y: auto;">
+                Cliquez sur "Générer la Synthèse" pour compiler les données...
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="audit-btn" onclick="generateReport()" style="flex: 2;">Générer la Synthèse</button>
+                <button class="audit-btn" onclick="copyReport()" style="flex: 1; background: var(--accent-blue-dim); color: var(--accent-blue);">Copier pour l'IA</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); font-style: italic;">
+                Note : Pour un rapport complet, utilisez d'abord le "Diag" et le "Tech Audit".
+            </p>
+        </div>
+    </div>
+
+    <div class="footer-branding">The IT Mechanic • Diagnostic Hub v2.6</div>
 </div>
 
 <!-- JS Logic -->
 <script src="app-nav.js"></script>
 <script src="tool-diag.js"></script>
 <script src="tool-tech.js"></script>
+<script src="tool-report.js"></script>
 </body>
 </html>
