@@ -307,6 +307,18 @@
             <div class="loader" id="loader"></div>
             <div class="results-box" id="resultsArea">
                 <div class="tech-badge"><span class="tech-name" id="detectedTech">Chargement...</span></div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; text-align: left;">
+                    <div id="marketingSignals" style="background: rgba(124, 168, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(124, 168, 255, 0.1);">
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Marketing & Tracking</h4>
+                        <ul id="marketingList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
+                    </div>
+                    <div id="techAlerts" style="background: rgba(248, 113, 113, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.1);">
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-red); margin-bottom: 0.5rem;">Alertes Techniques</h4>
+                        <ul id="techList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
+                    </div>
+                </div>
+
                 <div class="advice-card">
                     <h3>Diagnostic IT Mechanic</h3>
                     <p id="adviceText">Analyse de l'architecture en cours...</p>

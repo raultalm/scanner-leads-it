@@ -1,6 +1,6 @@
 /**
  * TECH AUDIT (STACK SCANNER) LOGIC
- * Scans websites for technical footprints (Automatic or Manual)
+ * Scans websites for technical footprints and business signals
  */
 
 (function() {
@@ -14,82 +14,105 @@
     
     const detectedTech = document.getElementById('detectedTech');
     const techAdvice = document.getElementById('adviceText');
+    const marketingList = document.getElementById('marketingList');
+    const techList = document.getElementById('techList');
 
-    // --- AUTOMATIC SCAN ---
+    // --- SCAN HANDLERS ---
     scanBtn.addEventListener('click', async () => {
         let url = urlInput.value.trim();
         if (!url) return;
         if (!url.startsWith('http')) url = 'https://' + url;
-
         resetUI();
         loader.style.display = 'block';
         scanBtn.disabled = true;
-
         try {
             const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
             if (!response.ok) throw new Error();
             const html = await response.text();
-            analyzeStack(html);
+            analyzeAll(html);
         } catch (err) {
-            console.error("Audit error:", err);
             errorMsg.style.display = 'block';
-            errorMsg.innerText = "Lecture automatique bloquée. Utilisez le mode manuel ci-dessous (Ctrl+U sur le site).";
         } finally {
             loader.style.display = 'none';
             scanBtn.disabled = false;
         }
     });
 
-    // --- MANUAL AUDIT (Source Code Paste) ---
     manualBtn.addEventListener('click', () => {
         const html = sourceInput.value.trim();
         if (!html) return;
-
         resetUI();
-        analyzeStack(html);
+        analyzeAll(html);
     });
 
     function resetUI() {
         resultsArea.style.display = 'none';
         errorMsg.style.display = 'none';
+        marketingList.innerHTML = '';
+        techList.innerHTML = '';
     }
 
-    function analyzeStack(html) {
+    function analyzeAll(html) {
+        const lowHtml = html.toLowerCase();
+        
+        // 1. STACK DETECTION
         const sigs = [
-            { name: "Next.js (React)", patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count'], advice: "Stack moderne et performante. Focus sur l'automatisation métier (API, CRM) ou le contenu." },
-            { name: "WordPress", patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'], advice: "Lourd et souvent mal sécurisé. Proposez un audit de performance (Core Web Vitals) ou une maintenance." },
-            { name: "Shopify", patterns: ['cdn.shopify.com', 'shopify-section', 'Shopify.shop', 'shopify-theme'], advice: "E-commerce solide. Opportunité : intégration d'outils tiers ou optimisation du tunnel d'achat." },
+            { name: "Next.js (React)", patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count'], advice: "Stack moderne. Focus sur l'automatisation métier ou l'optimisation SEO avancée." },
+            { name: "WordPress", patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'], advice: "Lourd et souvent mal sécurisé. Proposez une maintenance de sécurité ou un audit de vitesse." },
+            { name: "Shopify", patterns: ['cdn.shopify.com', 'shopify-section', 'Shopify.shop'], advice: "E-commerce solide. Opportunité : intégration CRM ou optimisation du tunnel d'achat." },
             { name: "React / Vite", patterns: ['/assets/index-', 'id="root"', 'react-dom'], advice: "App moderne (SPA). Très bon signe technique. Proposez de l'extension de fonctionnalités complexes." },
-            { name: "Wix / Squarespace", patterns: ['static.wixstatic.com', 'wix-ads', 'squarespace.com', 'sqsp.net'], advice: "Outil No-Code limité. Idéal pour une migration vers une solution sur mesure si le business grandit." },
-            { name: "PHP (Vieux)", patterns: ['.php', 'PHPSESSID'], advice: "Probable dette technique. Idéal pour un refactoring moderne ou une refonte sécurisée." }
+            { name: "Wix / Squarespace", patterns: ['static.wixstatic.com', 'wix-ads', 'squarespace.com'], advice: "Solution limitée. Idéal pour pitcher une migration vers un site sur mesure." },
+            { name: "PHP (Vieux)", patterns: ['.php', 'PHPSESSID'], advice: "Technologie vieillissante. Risque de bugs. Proposez un refactoring moderne." }
         ];
 
         let tech = "Stack Inconnue";
-        let advice = "L'audit n'a pas trouvé de signature connue. Le site utilise peut-être une technologie custom ou un framework plus rare.";
-
-        const lowHtml = html.toLowerCase();
-
+        let advice = "Audit manuel requis pour identifier l'architecture.";
         for (const s of sigs) {
             if (s.patterns.some(p => lowHtml.includes(p.toLowerCase()))) {
-                tech = s.name;
-                advice = s.advice;
-                break;
+                tech = s.name; advice = s.advice; break;
             }
         }
-
-        // Vanilla check
         if (tech === "Stack Inconnue" && (html.includes('<script') || html.includes('<html'))) {
-            tech = "Vanilla HTML / JS";
-            advice = "Site ultra-léger codé à la main. Vérifiez si les outils de conversion et de tracking sont présents.";
+            tech = "Vanilla HTML / JS"; advice = "Site ultra-léger. Vérifiez la présence d'outils de conversion.";
         }
 
-        // Results Display
+        // 2. MARKETING SIGNALS
+        const signals = [
+            { label: "✅ Google Analytics", check: lowHtml.includes('gtag') || lowHtml.includes('google-analytics') },
+            { label: "✅ Facebook Pixel", check: lowHtml.includes('fbq(') || lowHtml.includes('connect.facebook.net') },
+            { label: "✅ TikTok Pixel", check: lowHtml.includes('ttq.load') },
+            { label: "✅ WhatsApp Direct", check: lowHtml.includes('wa.me') || lowHtml.includes('api.whatsapp.com') },
+            { label: "✅ Booking Widget", check: lowHtml.includes('calendly') || lowHtml.includes('reservio') || lowHtml.includes('doctolib') }
+        ];
+
+        // 3. TECH ALERTS
+        const alerts = [
+            { label: "❌ Email en clair (Spam)", check: html.match(/[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+/)?.[0] && !lowHtml.includes('mailto:') },
+            { label: "❌ Pas de Meta Description", check: !lowHtml.includes('name="description"') },
+            { label: "❌ Pas de Viewport (Mobile)", check: !lowHtml.includes('name="viewport"') },
+            { label: "❌ Images non-optimisées", check: lowHtml.includes('.jpg') && !lowHtml.includes('loading="lazy"') },
+            { label: "❌ Fuite de version (WP)", check: lowHtml.includes('name="generator" content="wordpress') }
+        ];
+
+        // RENDER
         detectedTech.innerText = tech;
         techAdvice.innerText = advice;
-        resultsArea.style.display = 'block';
         
-        // Update Hub Header
+        signals.forEach(s => { if(s.check) addList(marketingList, s.label); });
+        if (marketingList.children.length === 0) addList(marketingList, "Aucun signal détecté");
+
+        alerts.forEach(a => { if(a.check) addList(techList, a.label); });
+        if (techList.children.length === 0) addList(techList, "Aucune alerte majeure");
+
+        resultsArea.style.display = 'block';
         document.getElementById('statValue').innerText = tech.split(' ')[0];
-        document.getElementById('statusValue').innerText = "Vérifié";
+        document.getElementById('statusValue').innerText = "Analysé";
+    }
+
+    function addList(target, text) {
+        const li = document.createElement('li');
+        li.style.marginBottom = '0.3rem';
+        li.innerText = text;
+        target.appendChild(li);
     }
 })();
