@@ -61,14 +61,14 @@
     function analyzeAll(html) {
         const lowHtml = html.toLowerCase();
         
-        // 1. STACK DETECTION
+        // 1. STACK DETECTION (Ordered from most specific to most general)
         const sigs = [
-            { name: "Next.js (React)", patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count'], advice: "Stack moderne. Focus sur l'automatisation métier ou l'optimisation SEO avancée." },
-            { name: "WordPress", patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'], advice: "Lourd et souvent mal sécurisé. Proposez une maintenance de sécurité ou un audit de vitesse." },
-            { name: "Shopify", patterns: ['cdn.shopify.com', 'shopify-section', 'Shopify.shop'], advice: "E-commerce solide. Opportunité : intégration CRM ou optimisation du tunnel d'achat." },
-            { name: "React / Vite", patterns: ['/assets/index-', 'id="root"', 'react-dom'], advice: "App moderne (SPA). Très bon signe technique. Proposez de l'extension de fonctionnalités complexes." },
-            { name: "Wix / Squarespace", patterns: ['static.wixstatic.com', 'wix-ads', 'squarespace.com'], advice: "Solution limitée. Idéal pour pitcher une migration vers un site sur mesure." },
-            { name: "PHP (Vieux)", patterns: ['.php', 'PHPSESSID'], advice: "Technologie vieillissante. Risque de bugs. Proposez un refactoring moderne." }
+            { name: "Wix / Squarespace", patterns: ['static.wixstatic.com', 'wix-ads', 'wix-code', 'squarespace.com', 'sqsp.net'], advice: "Solution 'No-Code' propriétaire. Idéal pour une migration vers un site sur mesure si le business évolue." },
+            { name: "Shopify", patterns: ['cdn.shopify.com', 'shopify-section', 'shopify-theme', 'shopify.shop'], advice: "E-commerce leader. Focus sur l'optimisation du tunnel d'achat ou l'automatisation des flux stocks/factures." },
+            { name: "WordPress", patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'], advice: "Lourd et souvent mal sécurisé. Proposez une maintenance de sécurité ou un audit de performance." },
+            { name: "Next.js (React)", patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count'], advice: "Stack moderne et performante. Focus sur l'automatisation métier ou l'optimisation SEO avancée." },
+            { name: "React / Vite", patterns: ['/assets/index-', 'vite-plugin-react', 'react-dom'], advice: "App moderne (SPA). Très bon signe technique. Proposez de l'extension de fonctionnalités complexes." },
+            { name: "PHP (Vieux)", patterns: ['.php', 'PHPSESSID'], advice: "Technologie vieillissante. Risque de bugs et de failles. Proposez un refactoring moderne." }
         ];
 
         let tech = "Stack Inconnue";
