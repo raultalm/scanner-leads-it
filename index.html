@@ -45,6 +45,7 @@
         }
 
         .hub-container {
+            position: relative;
             width: 100%;
             max-width: 850px;
             background: var(--bg-card);
@@ -99,6 +100,30 @@
         .nav-btn:hover:not(.active) {
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
+        }
+
+        .reset-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(248, 113, 113, 0.05);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            color: var(--gauge-red);
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .reset-btn:hover {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: var(--gauge-red);
+            transform: translateY(-1px);
         }
 
         /* --- SHARED HEADER --- */
@@ -216,11 +241,12 @@
 <body>
 
 <div class="hub-container">
+    <button class="reset-btn" onclick="globalReset()">🔄 Reset</button>
+
     <nav class="tool-nav">
         <button class="nav-btn active" onclick="switchTool('diag')">🛠️ Le Diag</button>
         <button class="nav-btn" onclick="switchTool('tech')">💻 Tech Audit</button>
         <button class="nav-btn" onclick="switchTool('report')">📄 Rapport</button>
-        <button class="nav-btn" onclick="switchTool('upcoming')" style="opacity: 0.5;">🔒 Plus</button>
     </nav>
 
     <header>

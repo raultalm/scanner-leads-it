@@ -56,6 +56,24 @@
         updateDiagUI(finalScore);
     };
 
+    /**
+     * RESET DIAG
+     * Resets all diag inputs to default
+     */
+    window.resetDiag = function() {
+        reviewsInput.value = 0;
+        ratingInput.value = 1.0;
+        websiteFlag.checked = false;
+        mobileFlag.checked = false;
+        bookingFlag.checked = false;
+        commFlag.checked = false;
+        
+        mobileRow.classList.remove('disabled');
+        ratingRow.classList.add('disabled');
+        
+        window.calculateDiag();
+    };
+
     function updateDiagUI(score) {
         // Rotate needle
         const rotation = (score / 100) * 180 - 90;
@@ -63,7 +81,10 @@
         
         // Update values
         needleScore.innerText = score;
-        if (document.querySelector('.nav-btn.active').innerText.includes('Diag')) {
+        
+        // Only update hub stat if we are on Diag view
+        const activeNav = document.querySelector('.nav-btn.active');
+        if (activeNav && activeNav.innerText.includes('Diag')) {
             statValue.innerText = `${score}/100`;
         }
         
@@ -96,7 +117,11 @@
         statusValue.innerText = level;
         oppText.innerText = level;
         oppText.style.color = color;
-        hubTagline.innerText = desc;
+        
+        // Only update hub tagline if we are on Diag view
+        if (activeNav && activeNav.innerText.includes('Diag')) {
+            hubTagline.innerText = desc;
+        }
         
         // Glow indicators
         labelOpp.classList.toggle('active', score >= 40);

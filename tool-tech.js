@@ -22,7 +22,7 @@
         let url = urlInput.value.trim();
         if (!url) return;
         if (!url.startsWith('http')) url = 'https://' + url;
-        resetUI();
+        resetResults();
         loader.style.display = 'block';
         scanBtn.disabled = true;
         try {
@@ -41,16 +41,26 @@
     manualBtn.addEventListener('click', () => {
         const html = sourceInput.value.trim();
         if (!html) return;
-        resetUI();
+        resetResults();
         analyzeAll(html);
     });
 
-    function resetUI() {
+    function resetResults() {
         resultsArea.style.display = 'none';
         errorMsg.style.display = 'none';
         marketingList.innerHTML = '';
         techList.innerHTML = '';
     }
+
+    /**
+     * RESET TECH
+     * Global reset for tech audit tool
+     */
+    window.resetTech = function() {
+        urlInput.value = '';
+        sourceInput.value = '';
+        resetResults();
+    };
 
     function analyzeAll(html) {
         const lowHtml = html.toLowerCase();
@@ -105,8 +115,13 @@
         if (techList.children.length === 0) addList(techList, "Aucune alerte majeure");
 
         resultsArea.style.display = 'block';
-        document.getElementById('statValue').innerText = tech.split(' ')[0];
-        document.getElementById('statusValue').innerText = "Analysé";
+        
+        // Update Hub Header only if Tech view is active
+        const activeNav = document.querySelector('.nav-btn.active');
+        if (activeNav && activeNav.innerText.includes('Tech')) {
+            document.getElementById('statValue').innerText = tech.split(' ')[0];
+            document.getElementById('statusValue').innerText = "Analysé";
+        }
     }
 
     function addList(target, text) {
