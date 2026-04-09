@@ -74,12 +74,16 @@
         addEntry(interBox, inputsNoLabel.length === 0 ? `✅ Champs avec labels` : `⚠️ ${inputsNoLabel.length} champs sans labels`);
         if (inputsNoLabel.length > 0) repairs.push("Formulaires : Liez chaque champ à une balise <label> via l'attribut 'id'.");
 
-        // 3. Contrast & Advanced Links
-        if (url) {
-            btnWave.onclick = () => window.open(`https://wave.webaim.org/report#/${url}`, '_blank');
-            btnAxe.onclick = () => window.open(`https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}&category=ACCESSIBILITY`, '_blank');
-            btnContrast.onclick = () => window.open(`https://webaim.org/resources/contrastchecker/`, '_blank');
-        }
+        // 3. Always Active External Links
+        btnWave.onclick = () => {
+            const target = url ? `https://wave.webaim.org/report#/${url}` : `https://wave.webaim.org/`;
+            window.open(target, '_blank');
+        };
+        btnAxe.onclick = () => {
+            const target = url ? `https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}&category=ACCESSIBILITY` : `https://pagespeed.web.dev/`;
+            window.open(target, '_blank');
+        };
+        btnContrast.onclick = () => window.open(`https://webaim.org/resources/contrastchecker/`, '_blank');
 
         // 4. Verdict UI
         if (repairs.length === 0) {

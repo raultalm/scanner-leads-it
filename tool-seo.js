@@ -16,15 +16,16 @@
     const repairsList = document.getElementById('seoRepairs');
 
     const btnPageSpeed = document.getElementById('linkGoogleSpeed');
-    const btnRichResults = document.getElementById('linkGoogleRich');
     const btnYellowLab = document.getElementById('linkYellowLab');
 
     scanBtn.addEventListener('click', async () => {
         let url = urlInput.value.trim();
         const manualSource = sourceInput.value.trim();
+        
         if (manualSource) { analyzeSEO(manualSource, url); return; }
         if (!url) return;
         if (!url.startsWith('http')) url = 'https://' + url;
+
         resultsArea.style.display = 'none';
         loader.style.display = 'block';
         try {
@@ -79,16 +80,14 @@
         if (desc.length < 70) repairs.push("Meta Description : Rédigez un résumé captivant de 140-160 caractères pour booster le clic.");
 
         addEntry(metaBox, hasOG ? `✅ Open Graph OK` : `⚠️ Pas de balises OG`);
+
+        if (desc.length < 70) repairs.push("Meta Description : Rédigez un résumé de 140-160 caractères.");
         if (!hasOG) repairs.push("Réseaux Sociaux : Installez les balises Open Graph (og:title, og:image) pour un partage pro sur Facebook/LinkedIn.");
 
         // 3. Verdict UI
-        if (repairs.length === 0) {
-            adviceText.innerText = "Moteur parfaitement réglé. Focus sur le contenu et l'autorité.";
-        } else if (repairs.length <= 2) {
-            adviceText.innerText = "Quelques vis à resserrer pour optimiser la visibilité.";
-        } else {
-            adviceText.innerText = "Structure défaillante : le site est freiné techniquement.";
-        }
+        if (repairs.length === 0) adviceText.innerText = "Base technique solide.";
+        else if (repairs.length <= 2) adviceText.innerText = "Quelques optimisations nécessaires.";
+        else adviceText.innerText = "Structure SEO défaillante.";
 
         repairs.forEach(r => {
             const li = document.createElement('li');
@@ -96,12 +95,16 @@
             repairsList.appendChild(li);
         });
 
-        // 4. External Links
-        if (url) {
-            btnPageSpeed.onclick = () => window.open(`https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}`, '_blank');
-            btnRichResults.onclick = () => window.open(`https://search.google.com/test/rich-results?url=${encodeURIComponent(url)}`, '_blank');
-            btnYellowLab.onclick = () => window.open(`https://yellowlab.tools/`, '_blank');
-        }
+        // 4. Always Active External Links
+        btnPageSpeed.onclick = () => {
+            const target = url ? `https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}` : `https://pagespeed.web.dev/`;
+            window.open(target, '_blank');
+        };
+        btnYellowLab.onclick = () => {
+            const target = url ? `https://yellowlab.tools/?url=${encodeURIComponent(url)}` : `https://yellowlab.tools/`;
+            window.open(target, '_blank');
+        };
+
         resultsArea.style.display = 'block';
     }
 
@@ -112,8 +115,8 @@
     }
 
     window.resetSEO = function() {
-        document.getElementById('seoUrlInput').value = '';
-        document.getElementById('seoSourceInput').value = '';
+        urlInput.value = '';
+        sourceInput.value = '';
         resultsArea.style.display = 'none';
     };
 })();
