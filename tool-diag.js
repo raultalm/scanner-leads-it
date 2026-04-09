@@ -6,7 +6,10 @@
 (function() {
     // Elements
     const reviewsInput = document.getElementById('reviewsInput');
+    const reviewsVal = document.getElementById('reviewsVal');
     const ratingInput = document.getElementById('ratingInput');
+    const ratingVal = document.getElementById('ratingVal');
+    
     const websiteFlag = document.getElementById('flag-website');
     const mobileFlag = document.getElementById('flag-mobile');
     const bookingFlag = document.getElementById('flag-booking');
@@ -26,8 +29,8 @@
 
     // Global Access (for Hub)
     window.calculateDiag = function() {
-        const reviews = parseInt(reviewsInput.value);
-        const rating = parseFloat(ratingInput.value);
+        const reviews = parseInt(reviewsVal.value) || 0;
+        const rating = parseFloat(ratingVal.value) || 1.0;
         
         // Handle no reviews state
         if (reviews === 0) ratingRow.classList.add('disabled');
@@ -62,7 +65,9 @@
      */
     window.resetDiag = function() {
         reviewsInput.value = 0;
+        reviewsVal.value = 0;
         ratingInput.value = 1.0;
+        ratingVal.value = 1.0;
         websiteFlag.checked = false;
         mobileFlag.checked = false;
         bookingFlag.checked = false;
@@ -87,9 +92,6 @@
         if (activeNav && activeNav.innerText.includes('Diag')) {
             statValue.innerText = `${score}/100`;
         }
-        
-        document.getElementById('reviewsVal').innerText = reviewsInput.value;
-        document.getElementById('ratingVal').innerText = ratingInput.value.replace('.', ',');
 
         let level = "";
         let desc = "";
@@ -128,6 +130,33 @@
         labelStable.classList.toggle('active', score < 40);
     }
 
+    // --- SYNC SLIDERS & INPUTS ---
+    
+    // Reviews Sync
+    reviewsInput.addEventListener('input', () => {
+        reviewsVal.value = reviewsInput.value;
+        window.calculateDiag();
+    });
+    reviewsVal.addEventListener('input', () => {
+        reviewsInput.value = reviewsVal.value;
+        window.calculateDiag();
+    });
+
+    // Rating Sync
+    ratingInput.addEventListener('input', () => {
+        ratingVal.value = ratingInput.value;
+        window.calculateDiag();
+    });
+    ratingVal.addEventListener('input', () => {
+        ratingInput.value = ratingVal.value;
+        window.calculateDiag();
+    });
+
+    // Toggle Listeners
+    [websiteFlag, mobileFlag, bookingFlag, commFlag].forEach(el => {
+        el.addEventListener('change', window.calculateDiag);
+    });
+
     // Website-Mobile Dependency Logic
     websiteFlag.addEventListener('change', () => {
         if (websiteFlag.checked) {
@@ -138,10 +167,6 @@
         }
         window.calculateDiag();
     });
-
-    // Listeners
-    [ratingInput, reviewsInput].forEach(el => el.addEventListener('input', window.calculateDiag));
-    [mobileFlag, bookingFlag, commFlag].forEach(el => el.addEventListener('change', window.calculateDiag));
 
     // Initialize
     window.calculateDiag();

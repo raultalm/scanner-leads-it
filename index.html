@@ -81,14 +81,14 @@
                 <label>Avis Google</label>
                 <div class="slider-wrapper">
                     <input type="range" id="reviewsInput" min="0" max="500" step="1" value="0">
-                    <div class="value-box" id="reviewsVal">0</div>
+                    <input type="number" id="reviewsVal" class="value-box" value="0" min="0" max="9999">
                 </div>
             </div>
             <div class="control-row" id="ratingRow">
                 <label>Note Moyenne</label>
                 <div class="slider-wrapper">
                     <input type="range" id="ratingInput" min="1.0" max="5.0" step="0.1" value="1.0">
-                    <div class="value-box" id="ratingVal">1,0</div>
+                    <input type="number" id="ratingVal" class="value-box" value="1.0" min="1" max="5" step="0.1">
                 </div>
             </div>
             <div class="control-row"><label>Pas de Site Web</label><label class="switch"><input type="checkbox" id="flag-website"><span class="slider"></span></label></div>
