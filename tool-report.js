@@ -4,10 +4,6 @@
  */
 
 (function() {
-    /**
-     * GENERATE REPORT
-     * Compiles data from all tools
-     */
     window.generateReport = function() {
         const reportBox = document.getElementById('reportBox');
         
@@ -27,7 +23,11 @@
         const marketingSignals = Array.from(document.getElementById('marketingList').children).map(li => li.innerText);
         const techAlerts = Array.from(document.getElementById('techList').children).map(li => li.innerText);
 
-        // 3. Construct the Prompt/Report
+        // 3. Gather SEO Data
+        const seoStructure = Array.from(document.getElementById('seoStructure').children).map(div => div.innerText);
+        const seoMeta = Array.from(document.getElementById('seoMeta').children).map(div => div.innerText);
+
+        // 4. Construct the Prompt/Report
         let report = `CONTEXTE DE PROSPECTION (Brief pour IA)\n`;
         report += `========================================\n\n`;
         
@@ -36,34 +36,30 @@
         report += `- Note Moyenne : ${rating}/5\n`;
         report += `- Score d'opportunité : ${score} (${status})\n\n`;
 
-        report += `[AUDIT TECHNIQUE]\n`;
-        report += `- Stack détectée : ${tech}\n`;
-        report += `- Signaux Marketing : ${marketingSignals.join(', ') || 'Aucun'}\n`;
-        report += `- Alertes Critiques : ${techAlerts.join(', ') || 'Aucune'}\n\n`;
+        report += `[AUDIT TECHNIQUE & SEO]\n`;
+        report += `- Stack : ${tech}\n`;
+        report += `- Signaux Mkt : ${marketingSignals.join(', ') || 'Aucun'}\n`;
+        report += `- SEO Structure : ${seoStructure.join(', ') || 'Non analysé'}\n`;
+        report += `- SEO Meta : ${seoMeta.join(', ') || 'Non analysé'}\n`;
+        report += `- Alertes : ${techAlerts.join(', ') || 'Aucune'}\n\n`;
 
         report += `[POINTS DE DOULEUR DÉTECTÉS]\n`;
-        if (hasNoWebsite) report += `- Absence de site web professionnel (utilise Facebook/Linktree).\n`;
-        if (isNotMobile) report += `- Site actuel non-adapté aux smartphones.\n`;
-        if (isManualBooking) report += `- Processus de réservation manuel (perte de conversion).\n`;
-        if (hasCommFriction) report += `- Avis clients signalant des difficultés de contact.\n\n`;
+        if (hasNoWebsite) report += `- Pas de site pro.\n`;
+        if (isNotMobile) report += `- Pas responsive.\n`;
+        if (isManualBooking) report += `- Réservation manuelle.\n`;
+        if (hasCommFriction) report += `- Problèmes de contact.\n\n`;
 
         report += `[MISSION DE L'IA]\n`;
-        report += `Agis en tant qu'expert en closing B2B. Rédige un email d'approche court, pragmatique et personnalisé pour ce prospect. \n`;
-        report += `Ton ton doit être celui d'un "IT Mechanic" : direct, sans jargon marketing, axé sur la réparation des processus cassés pour augmenter le CA. \n`;
-        report += `Ne sois pas vendeur, sois diagnostiqueur.`;
+        report += `Rédige un email d'approche court et pragmatique. Ton : "IT Mechanic" (direct, réparateur, pas vendeur). \n`;
+        report += `Focus sur la réparation des points de douleur détectés pour augmenter leur CA.`;
 
         reportBox.innerText = report;
     };
 
-    /**
-     * COPY REPORT
-     * Copies content to clipboard
-     */
     window.copyReport = function() {
         const reportBox = document.getElementById('reportBox');
         const text = reportBox.innerText;
-        if (text.includes('Cliquez sur')) return;
-
+        if (text.includes('Compilez')) return;
         navigator.clipboard.writeText(text).then(() => {
             const btn = event.currentTarget;
             const originalText = btn.innerText;
@@ -72,14 +68,8 @@
         });
     };
 
-    /**
-     * RESET REPORT
-     * Clears the report view
-     */
     window.resetReport = function() {
         const reportBox = document.getElementById('reportBox');
-        if (reportBox) {
-            reportBox.innerText = 'Cliquez sur "Générer la Synthèse" pour compiler les données...';
-        }
+        if (reportBox) reportBox.innerText = 'Compilez les données pour votre brief IA...';
     };
 })();

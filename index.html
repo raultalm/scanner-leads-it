@@ -170,7 +170,7 @@
 
         @keyframes viewIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- LE DIAG (LEAD SCORER) STYLES --- */
+        /* --- LE DIAG STYLES --- */
         .visualization-area {
             background: rgba(0, 0, 0, 0.25);
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -246,6 +246,7 @@
     <nav class="tool-nav">
         <button class="nav-btn active" onclick="switchTool('diag')">🛠️ Le Diag</button>
         <button class="nav-btn" onclick="switchTool('tech')">💻 Tech Audit</button>
+        <button class="nav-btn" onclick="switchTool('seo')">🔍 SEO</button>
         <button class="nav-btn" onclick="switchTool('report')">📄 Rapport</button>
     </nav>
 
@@ -266,7 +267,7 @@
         </div>
     </header>
 
-    <!-- VIEW 1: LE DIAG (LEAD SCORER) -->
+    <!-- VIEW 1: LE DIAG -->
     <div id="view-diag" class="tool-view active">
         <div class="visualization-area">
             <div class="gauge-container">
@@ -318,68 +319,92 @@
         </div>
     </div>
 
-    <!-- VIEW 2: TECH AUDIT (STACK SCANNER) -->
+    <!-- VIEW 2: TECH AUDIT -->
     <div id="view-tech" class="tool-view">
         <div class="tech-audit-area">
             <div class="audit-input-group">
                 <input type="text" id="urlInput" placeholder="https://exemple.be" autocomplete="off">
                 <button class="audit-btn" id="scanBtn">Scanner Automatique</button>
-                
                 <div style="margin: 1rem 0; color: var(--text-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">— OU —</div>
-                
-                <textarea id="sourceInput" placeholder="Collez le code source ici (Ctrl+U sur le site)..." style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem; color: #fff; font-size: 0.8rem; height: 80px; resize: none; outline: none; transition: var(--transition);"></textarea>
+                <textarea id="sourceInput" placeholder="Collez le code source ici (Ctrl+U)..." style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem; color: #fff; font-size: 0.8rem; height: 80px; resize: none; outline: none;"></textarea>
                 <button class="audit-btn" id="manualBtn" style="background: var(--accent-blue-dim); color: var(--accent-blue); margin-top: -0.5rem; font-size: 0.85rem; padding: 0.8rem;">Analyser le code source</button>
             </div>
-            
             <div class="loader" id="loader"></div>
             <div class="results-box" id="resultsArea">
                 <div class="tech-badge"><span class="tech-name" id="detectedTech">Chargement...</span></div>
-                
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; text-align: left;">
-                    <div id="marketingSignals" style="background: rgba(124, 168, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(124, 168, 255, 0.1);">
+                    <div style="background: rgba(124, 168, 255, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(124, 168, 255, 0.1);">
                         <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.5rem;">Marketing & Tracking</h4>
                         <ul id="marketingList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
                     </div>
-                    <div id="techAlerts" style="background: rgba(248, 113, 113, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.1);">
+                    <div style="background: rgba(248, 113, 113, 0.05); padding: 1rem; border-radius: 12px; border: 1px solid rgba(248, 113, 113, 0.1);">
                         <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-red); margin-bottom: 0.5rem;">Alertes Techniques</h4>
                         <ul id="techList" style="list-style: none; font-size: 0.8rem; color: #cbd5e1;"></ul>
                     </div>
                 </div>
-
-                <div class="advice-card">
-                    <h3>Diagnostic IT Mechanic</h3>
-                    <p id="adviceText">Analyse de l'architecture en cours...</p>
-                </div>
+                <div class="advice-card"><p id="adviceText">Analyse de l'architecture...</p></div>
             </div>
-            <div id="errorMsg" style="color: #f87171; font-size: 0.9rem; display: none; background: rgba(248,113,113,0.1); padding: 1rem; border-radius: 12px;">
-                Lecture bloquée par le site. Vérifiez l'URL ou essayez un autre domaine.
+            <div id="errorMsg" style="color: #f87171; font-size: 0.9rem; display: none; background: rgba(248,113,113,0.1); padding: 1rem; border-radius: 12px;">Lecture bloquée.</div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: SEO AUDIT -->
+    <div id="view-seo" class="tool-view">
+        <div class="tech-audit-area">
+            <div class="audit-input-group">
+                <input type="text" id="seoUrlInput" placeholder="https://exemple.be" autocomplete="off">
+                <button class="audit-btn" id="seoScanBtn">Lancer l'Audit SEO</button>
+                <textarea id="seoSourceInput" placeholder="Ou collez le code source (Ctrl+U)..." style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem; color: #fff; font-size: 0.8rem; height: 60px; resize: none; outline: none; margin-top: 1rem;"></textarea>
+            </div>
+            <div class="loader" id="seoLoader"></div>
+            <div id="seoResults" class="results-box" style="text-align: left;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.8rem;">Structure de Contenu</h4>
+                        <div id="seoStructure" style="font-size: 0.85rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--gauge-yellow); margin-bottom: 0.8rem;">Meta & Social</h4>
+                        <div id="seoMeta" style="font-size: 0.85rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                    <h4 style="font-size: 0.7rem; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 0.8rem;">Outils Gratuits Externes</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                        <button id="linkGoogleSpeed" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #4285F4; color: white;">PageSpeed</button>
+                        <button id="linkGoogleRich" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #34A853; color: white;">Rich Results</button>
+                        <button id="linkYellowLab" class="audit-btn" style="flex: 1; padding: 0.6rem; font-size: 0.7rem; background: #f1c40f; color: black;">Yellow Lab</button>
+                    </div>
+                </div>
+                <div class="advice-card" style="border-left-color: var(--gauge-yellow);">
+                    <h3>Le Verdict SEO</h3>
+                    <p id="seoAdvice">Prêt pour l'analyse...</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- VIEW 3: PROSPECT REPORT (AI BRIEF) -->
+    <!-- VIEW 4: PROSPECT REPORT -->
     <div id="view-report" class="tool-view">
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
             <div id="reportBox" style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 20px; padding: 2rem; color: #e2e8f0; font-family: monospace; font-size: 0.85rem; line-height: 1.6; white-space: pre-wrap; text-align: left; max-height: 400px; overflow-y: auto;">
-                Cliquez sur "Générer la Synthèse" pour compiler les données...
+                Compilez les données pour votre brief IA...
             </div>
             <div style="display: flex; gap: 1rem;">
                 <button class="audit-btn" onclick="generateReport()" style="flex: 2;">Générer la Synthèse</button>
                 <button class="audit-btn" onclick="copyReport()" style="flex: 1; background: var(--accent-blue-dim); color: var(--accent-blue);">Copier pour l'IA</button>
             </div>
-            <p style="font-size: 0.75rem; color: var(--text-secondary); font-style: italic;">
-                Note : Pour un rapport complet, utilisez d'abord le "Diag" et le "Tech Audit".
-            </p>
         </div>
     </div>
 
-    <div class="footer-branding">The IT Mechanic • Diagnostic Hub v2.6</div>
+    <div class="footer-branding">The IT Mechanic • Diagnostic Hub v2.7</div>
 </div>
 
 <!-- JS Logic -->
 <script src="app-nav.js"></script>
 <script src="tool-diag.js"></script>
 <script src="tool-tech.js"></script>
+<script src="tool-seo.js"></script>
 <script src="tool-report.js"></script>
 </body>
 </html>

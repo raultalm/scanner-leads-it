@@ -12,12 +12,12 @@ function switchTool(tool) {
     
     document.getElementById(`view-${tool}`).classList.add('active');
     
-    // Set active button (from event)
+    // Set active button
     if (window.event && window.event.currentTarget.classList.contains('nav-btn')) {
         window.event.currentTarget.classList.add('active');
     } else {
-        // Fallback for direct calls
-        document.querySelector(`.nav-btn[onclick*="${tool}"]`).classList.add('active');
+        const btn = document.querySelector(`.nav-btn[onclick*="${tool}"]`);
+        if (btn) btn.classList.add('active');
     }
 
     // Shared UI Elements
@@ -38,6 +38,12 @@ function switchTool(tool) {
         statLabel.innerText = "Stack Info";
         statValue.innerText = "Standby";
         statusValue.innerText = "Scanner";
+    } else if(tool === 'seo') {
+        title.innerText = "Audit SEO";
+        tagline.innerText = "Analyse structurelle et visibilité sur les moteurs de recherche.";
+        statLabel.innerText = "SEO Signal";
+        statValue.innerText = "Analyse";
+        statusValue.innerText = "Structure";
     } else if(tool === 'report') {
         title.innerText = "Rapport";
         tagline.innerText = "Brief de prospection complet pour votre IA.";
@@ -49,20 +55,14 @@ function switchTool(tool) {
 
 /**
  * GLOBAL RESET
- * Clears all tools and returns to initial state
  */
 function globalReset() {
     if (!confirm("Effacer toutes les données et réinitialiser l'analyse ?")) return;
 
-    // Reset Diag
     if (typeof window.resetDiag === 'function') window.resetDiag();
-    
-    // Reset Tech Audit
     if (typeof window.resetTech === 'function') window.resetTech();
-    
-    // Reset Report
+    if (typeof window.resetSEO === 'function') window.resetSEO();
     if (typeof window.resetReport === 'function') window.resetReport();
 
-    // Return to Diag View
     switchTool('diag');
 }
