@@ -1,6 +1,6 @@
 /**
  * SEO AUDIT TOOL LOGIC
- * Structural analysis and external deep-linking
+ * Structural analysis and detailed repairs
  */
 
 (function() {
@@ -13,44 +13,30 @@
     const structureBox = document.getElementById('seoStructure');
     const metaBox = document.getElementById('seoMeta');
     const adviceText = document.getElementById('seoAdvice');
+    const repairsList = document.getElementById('seoRepairs');
 
-    // External Link Buttons
     const btnPageSpeed = document.getElementById('linkGoogleSpeed');
     const btnRichResults = document.getElementById('linkGoogleRich');
     const btnYellowLab = document.getElementById('linkYellowLab');
 
-    // --- HANDLERS ---
     scanBtn.addEventListener('click', async () => {
         let url = urlInput.value.trim();
         const manualSource = sourceInput.value.trim();
-
-        if (manualSource) {
-            analyzeSEO(manualSource, url);
-            return;
-        }
-
+        if (manualSource) { analyzeSEO(manualSource, url); return; }
         if (!url) return;
         if (!url.startsWith('http')) url = 'https://' + url;
-
         resultsArea.style.display = 'none';
         loader.style.display = 'block';
-
         try {
             const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
             if (!response.ok) throw new Error();
             const html = await response.text();
             analyzeSEO(html, url);
         } catch (err) {
-            alert("Accès auto bloqué. Veuillez copier-coller le code source (Ctrl+U) dans la zone dédiée.");
-        } finally {
-            loader.style.display = 'none';
-        }
+            alert("Accès auto bloqué. Utilisez le mode manuel (Ctrl+U).");
+        } finally { loader.style.display = 'none'; }
     });
 
-    /**
-     * ANALYZE SEO
-     * Scans HTML for structural markers
-     */
     function analyzeSEO(html, url) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
@@ -58,6 +44,9 @@
 
         structureBox.innerHTML = '';
         metaBox.innerHTML = '';
+        repairsList.innerHTML = '';
+
+        let repairs = [];
 
         // 1. Structure Analysis
         const h1s = doc.querySelectorAll('h1');
@@ -65,41 +54,54 @@
         const imgs = doc.querySelectorAll('img');
         const imgsNoAlt = Array.from(imgs).filter(img => !img.getAttribute('alt'));
 
-        addEntry(structureBox, h1s.length === 1 ? `✅ 1 Balise H1` : `❌ ${h1s.length} Balises H1 (Recommandé: 1)`);
-        addEntry(structureBox, h2s.length > 0 ? `✅ ${h2s.length} Balises H2` : `❌ Aucune balise H2 détectée`);
-        addEntry(structureBox, imgsNoAlt.length === 0 ? `✅ Toutes les images ont un ALT` : `⚠️ ${imgsNoAlt.length} images sans description (ALT)`);
+        addEntry(structureBox, h1s.length === 1 ? `✅ 1 Balise H1` : `❌ ${h1s.length} Balises H1`);
+        if (h1s.length === 0) repairs.push("H1 : Ajoutez une balise <h1> unique contenant votre mot-clé principal.");
+        if (h1s.length > 1) repairs.push("H1 : Supprimez les H1 en trop pour n'en garder qu'un seul (hiérarchie Google).");
+
+        addEntry(structureBox, h2s.length > 0 ? `✅ ${h2s.length} Balises H2` : `❌ Aucune balise H2`);
+        if (h2s.length === 0) repairs.push("H2 : Utilisez des balises <h2> pour structurer vos sections et aider Google à lire le site.");
+
+        addEntry(structureBox, imgsNoAlt.length === 0 ? `✅ Images ALT OK` : `⚠️ ${imgsNoAlt.length} images sans ALT`);
+        if (imgsNoAlt.length > 0) repairs.push("Images : Ajoutez un attribut 'alt' descriptif sur chaque image (accessibilité et SEO Images).");
 
         // 2. Meta & Social Analysis
-        const title = doc.querySelector('title')?.innerText || "";
-        const desc = doc.querySelector('meta[name="description"]')?.getAttribute('content') || "";
+        const titleTag = doc.querySelector('title');
+        const title = titleTag ? titleTag.innerText : "";
+        const metaDescTag = doc.querySelector('meta[name="description"]');
+        const desc = metaDescTag ? metaDescTag.getAttribute('content') : "";
         const hasOG = lowHtml.includes('property="og:');
 
-        addEntry(metaBox, title.length >= 30 && title.length <= 65 ? `✅ Titre optimisé (${title.length} car.)` : `⚠️ Titre à revoir (${title.length} car.)`);
-        addEntry(metaBox, desc.length > 70 ? `✅ Meta Description présente` : `❌ Meta Description absente ou trop courte`);
-        addEntry(metaBox, hasOG ? `✅ Balises Open Graph détectées` : `⚠️ Pas de balises réseaux sociaux (OG)`);
+        addEntry(metaBox, title.length >= 30 && title.length <= 65 ? `✅ Titre OK` : `⚠️ Titre non-optimal`);
+        if (title.length < 30) repairs.push("Titre : Allongez votre balise <title> (30-65 car.) pour inclure votre service et ville.");
+        if (title.length > 65) repairs.push("Titre : Raccourcissez votre titre (max 65 car.) pour éviter qu'il soit coupé sur Google.");
 
-        // 3. Verdict
-        let score = 0;
-        if (h1s.length === 1) score++;
-        if (h2s.length > 0) score++;
-        if (imgsNoAlt.length === 0) score++;
-        if (desc.length > 70) score++;
+        addEntry(metaBox, desc.length > 70 ? `✅ Meta Desc OK` : `❌ Meta Desc absente/courte`);
+        if (desc.length < 70) repairs.push("Meta Description : Rédigez un résumé captivant de 140-160 caractères pour booster le clic.");
 
-        if (score >= 4) {
-            adviceText.innerText = "Base technique solide. Focus sur le contenu et les backlinks.";
-        } else if (score >= 2) {
-            adviceText.innerText = "Des erreurs structurelles freinent la visibilité. Correction des titres et des metas nécessaire.";
+        addEntry(metaBox, hasOG ? `✅ Open Graph OK` : `⚠️ Pas de balises OG`);
+        if (!hasOG) repairs.push("Réseaux Sociaux : Installez les balises Open Graph (og:title, og:image) pour un partage pro sur Facebook/LinkedIn.");
+
+        // 3. Verdict UI
+        if (repairs.length === 0) {
+            adviceText.innerText = "Moteur parfaitement réglé. Focus sur le contenu et l'autorité.";
+        } else if (repairs.length <= 2) {
+            adviceText.innerText = "Quelques vis à resserrer pour optimiser la visibilité.";
         } else {
-            adviceText.innerText = "SEO critique. Le site est quasi-invisible techniquement. Refonte structurelle prioritaire.";
+            adviceText.innerText = "Structure défaillante : le site est freiné techniquement.";
         }
 
-        // 4. Update External Links
+        repairs.forEach(r => {
+            const li = document.createElement('li');
+            li.innerText = r;
+            repairsList.appendChild(li);
+        });
+
+        // 4. External Links
         if (url) {
             btnPageSpeed.onclick = () => window.open(`https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}`, '_blank');
             btnRichResults.onclick = () => window.open(`https://search.google.com/test/rich-results?url=${encodeURIComponent(url)}`, '_blank');
             btnYellowLab.onclick = () => window.open(`https://yellowlab.tools/`, '_blank');
         }
-
         resultsArea.style.display = 'block';
     }
 
@@ -109,13 +111,9 @@
         parent.appendChild(div);
     }
 
-    /**
-     * RESET SEO
-     */
     window.resetSEO = function() {
-        urlInput.value = '';
-        sourceInput.value = '';
+        document.getElementById('seoUrlInput').value = '';
+        document.getElementById('seoSourceInput').value = '';
         resultsArea.style.display = 'none';
     };
-
 })();
