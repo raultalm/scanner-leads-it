@@ -296,8 +296,14 @@
         <div class="tech-audit-area">
             <div class="audit-input-group">
                 <input type="text" id="urlInput" placeholder="https://exemple.be" autocomplete="off">
-                <button class="audit-btn" id="scanBtn">Démarrer l'Audit Tech</button>
+                <button class="audit-btn" id="scanBtn">Scanner Automatique</button>
+                
+                <div style="margin: 1rem 0; color: var(--text-secondary); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">— OU —</div>
+                
+                <textarea id="sourceInput" placeholder="Collez le code source ici (Ctrl+U sur le site)..." style="width: 100%; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); border-radius: 12px; padding: 1rem; color: #fff; font-size: 0.8rem; height: 80px; resize: none; outline: none; transition: var(--transition);"></textarea>
+                <button class="audit-btn" id="manualBtn" style="background: var(--accent-blue-dim); color: var(--accent-blue); margin-top: -0.5rem; font-size: 0.85rem; padding: 0.8rem;">Analyser le code source</button>
             </div>
+            
             <div class="loader" id="loader"></div>
             <div class="results-box" id="resultsArea">
                 <div class="tech-badge"><span class="tech-name" id="detectedTech">Chargement...</span></div>
