@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Tech Audit - The IT Mechanic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page: #0d0f12;
+            --bg-card: #16191f;
+            --glass-bg: rgba(22, 25, 31, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: #8e95a2;
+            --accent-blue: #7ca8ff;
+            --radius-xl: 28px;
+            --radius-lg: 18px;
+            --transition: all 0.3s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            background-image: radial-gradient(circle at 0% 0%, rgba(124, 168, 255, 0.05) 0%, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .audit-container {
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.1rem 1.5rem;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(124, 168, 255, 0.2);
+        }
+
+        button {
+            background: var(--accent-blue);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 1.1rem 2.5rem;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 25px rgba(124, 168, 255, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-area {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(124, 168, 255, 0.1);
+            border: 1px solid rgba(124, 168, 255, 0.3);
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+        }
+
+        .audit-advice {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-align: left;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .audit-advice h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.15em;
+        }
+
+        .audit-advice p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        .loader {
+            display: none;
+            margin: 2rem auto;
+            width: 32px;
+            height: 32px;
+            border: 3px solid rgba(124, 168, 255, 0.1);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #errorMsg {
+            color: #f87171;
+            font-size: 0.9rem;
+            margin-top: 1.5rem;
+            display: none;
+            padding: 1rem;
+            background: rgba(248, 113, 113, 0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="audit-container">
+    <header>
+        <h1>🛠️ Scanner de Stack</h1>
+        <p>Analysez la technologie "sous le capot" du lead.</p>
+    </header>
+
+    <div class="input-wrapper">
+        <input type="text" id="urlInput" placeholder="https://exemple.be" autocomplete="off">
+    </div>
+
+    <button id="scanBtn">Démarrer l'Audit</button>
+
+    <div class="loader" id="loader"></div>
+
+    <div class="results-area" id="resultsArea">
+        <div class="tech-badge">
+            <span class="tech-name" id="detectedTech">Analyse...</span>
+        </div>
+
+        <div class="audit-advice">
+            <h3>Diagnostic de l'IT Mechanic</h3>
+            <p id="adviceText">Détails de l'analyse technique...</p>
+        </div>
+    </div>
+
+    <div id="errorMsg">
+        Le site a bloqué la lecture automatique. Essayez de copier/coller l'URL exacte ou vérifiez votre connexion.
+    </div>
+</div>
+
+<script>
+    const scanBtn = document.getElementById('scanBtn');
+    const urlInput = document.getElementById('urlInput');
+    const resultsArea = document.getElementById('resultsArea');
+    const loader = document.getElementById('loader');
+    const errorMsg = document.getElementById('errorMsg');
+    const detectedTech = document.getElementById('detectedTech');
+    const adviceText = document.getElementById('adviceText');
+
+    scanBtn.addEventListener('click', async () => {
+        let url = urlInput.value.trim();
+        if (!url) return;
+        if (!url.startsWith('http')) url = 'https://' + url;
+
+        // Reset UI
+        resultsArea.style.display = 'none';
+        errorMsg.style.display = 'none';
+        loader.style.display = 'block';
+        scanBtn.disabled = true;
+
+        try {
+            // Using corsproxy.io (faster and more reliable than allorigins for Vercel/Cloudflare sites)
+            const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+            if (!response.ok) throw new Error('Proxy error');
+            
+            const html = await response.text();
+
+            if (html.length < 100) throw new Error('Empty response');
+
+            analyzeStack(html, url);
+        } catch (err) {
+            console.error(err);
+            errorMsg.style.display = 'block';
+        } finally {
+            loader.style.display = 'none';
+            scanBtn.disabled = false;
+        }
+    });
+
+    function analyzeStack(html, url) {
+        let tech = "Stack Inconnue";
+        let advice = "";
+
+        const signatures = [
+            { 
+                name: "Next.js (React)", 
+                patterns: ['/_next/static', '__NEXT_DATA__', 'next-head-count', '/_next/data'],
+                advice: "Stack ultra-moderne et performante. Opportunité de consulting faible sur la technique pure. Focalisez-vous sur l'automatisation métier (API, CRM) ou le contenu."
+            },
+            { 
+                name: "WordPress", 
+                patterns: ['/wp-content/', '/wp-includes/', 'wp-json', 'wordpress'],
+                advice: "Plateforme lourde et souvent mal sécurisée. Proposez un audit de performance (Core Web Vitals) ou une maintenance de sécurité mensuelle."
+            },
+            { 
+                name: "Shopify", 
+                patterns: ['cdn.shopify.com', 'shopify-section', 'Shopify.shop', 'Shopify.theme'],
+                advice: "E-commerce propriétaire solide. Opportunité : intégration d'outils tiers (stocks, facturation) ou optimisation du tunnel d'achat."
+            },
+            { 
+                name: "React / Vite", 
+                patterns: ['/assets/index-', 'id="root"', 'react-dom'],
+                advice: "Single Page App moderne. Très bon signe technique. Proposez de l'extension de fonctionnalités ou de l'analyse de données avancée."
+            },
+            { 
+                name: "Wix / Squarespace", 
+                patterns: ['static.wixstatic.com', 'wix-ads', 'squarespace.com', 'sqsp.net'],
+                advice: "Outil 'No-Code' limité pour la croissance. S'ils sont un gros business, ils sont mûrs pour une migration vers une solution sur mesure (Next.js/Shopify)."
+            },
+            { 
+                name: "PHP (Vieux)", 
+                patterns: ['.php', 'PHPSESSID', 'X-Powered-By: PHP'],
+                advice: "Technologie vieillissante. Forte probabilité de dette technique. Idéal pour proposer un refactoring moderne ou une refonte sécurisée."
+            }
+        ];
+
+        let found = false;
+        for (const sig of signatures) {
+            if (sig.patterns.some(p => html.toLowerCase().includes(p.toLowerCase()))) {
+                tech = sig.name;
+                advice = sig.advice;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            if (html.includes('<script') && !html.includes('src="')) {
+                tech = "Vanilla HTML / JS";
+                advice = "Site codé à la main. Très léger. Vérifiez si les outils de marketing (tracking, booking) sont présents et fonctionnels.";
+            } else {
+                tech = "Stack Hybride / Custom";
+                advice = "L'audit automatique n'a pas trouvé de signature connue. Le site utilise probablement une architecture propriétaire ou du Headless custom.";
+            }
+        }
+
+        detectedTech.innerText = tech;
+        adviceText.innerText = advice;
+        resultsArea.style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
